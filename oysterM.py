@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-# pull from tsv from usgs current conditions
+# pull from tsv from usgs current conditions during Gulf storm events 
 # time, salinity, and temperature (over how many years?) 
-# over 2 months, before during after storm for 4 different sites (LM, VB, CL, GI)
+# over one week, before during after storm for 4 different sites (LUMCON, Vermillion Bay, Calcaseiu Lake, Grand Isle)
 
 class oyster:
     """This class defines population tolerances for salinity and temperature and population size."""
