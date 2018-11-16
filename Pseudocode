@@ -1,1 +1,15 @@
 Pseudocode goes here
+
+#pull USGS data
+#use Megan's sites to make oyster population objects
+    #LUMCON, Vermillion Bay, Lake Calcaseiu, Grand Isle
+    #Vermillion Bay near Cypremort Point 07387040
+    #Calc River near Cameron 08017118
+    #Caminada Pass NW of Grand Isle 07380249
+    #Caillou Bay SW of Cocodrie 073813498
+
+#Homework
+#make different files with data from different sites
+#take a look at Hollis' stuff and try to choose tolerances of oysters at each site
+#read literature for ideas on how to format functions
+#think about how to store data, graph data (array maybe?) (several lines on one graph?)(Each condition with 4 lines for each pop?)
