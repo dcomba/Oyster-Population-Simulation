@@ -1,13 +1,35 @@
 #!/usr/bin/env python
 
-# pull from tsv from usgs current conditions during Gulf storm events 
-# time, salinity, and temperature (over how many years?) 
-# over one week, before during after storm for 4 different sites (LUMCON, Vermillion Bay, Calcaseiu Lake, Grand Isle)
+#pull USGS data
+#use Megan's sites to make oyster population objects with specific tolerances
+#LUMCON, Vermillion Bay, Lake Calcaseiu, Grand Isle
+	#Vermillion Bay near Cypremort Point 07387040
+    	#Calc River near Cameron 08017118
+    	#Caminada Pass NW of Grand Isle 07380249
+    	#Caillou Bay SW of Cocodrie 073813498
+#make different files with data from different sites (one data file per site)
+	#use data for salinity/temperature for all 4 sites 
+	#modeled over 2 month span from August 1, 2017-September 30, 2017 to include Hurricane Harvey
+#set up each site as a variable with all tolerances set									
+						#***SET TOLERANCES (hollis data)***
+	#VB= oyster(siteName= "Vermillion Bay", startSize= , startTime= , highSal =, lowSal= , highTemp= , lowTemp= )
+	#CL= oyster(siteName= "Calcaseiu Lake", startSize= , startTime= , highSal =, lowSal= , highTemp= , lowTemp= )
+	#GI= oyster(siteName= "Grand Isle", startSize= , startTime= , highSal =, lowSal= , highTemp= , lowTemp= )
+	#LM= oyster(siteName= "LUMCON", startSize= , startTime= , highSal =, lowSal= , highTemp= , lowTemp= )
+#read literature for ideas on how to format functions
+
+#store output data (population size in an array)
+
+#(several lines on one graph?)(Each condition with 4 lines for each pop?)
+	#3 line graphs (salinity, temperature, combined salinity temperature)
+	#4 populations on each graph
+	#graph: x-axis(generations), y-axis(population-size) 
 
 class oyster:
     """This class defines population tolerances for salinity and temperature and population size."""
 
-    def __init__(self, startSize, startTime, highSal, lowSal, highTemp, lowTemp, generations):
+    def __init__(self, siteName, startSize, startTime, highSal, lowSal, highTemp, lowTemp, generations):
+        self.siteName= siteName
         self.startSize = startSize
         self.startTime = startTime
         self.highSal = highSal
@@ -33,4 +55,6 @@ class oyster:
 ## FUTURE WORK
 # add in reproduction rate in addition to survival rate
 # pull data from USGS
+# one salinty, one temp and one combined affects graph
+
 
