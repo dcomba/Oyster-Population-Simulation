@@ -52,24 +52,33 @@ VB= oyster(siteName= "Vermillion Bay", startSize=100 , startTime=0 , highSal=7.3
 CL= oyster(siteName= "Calcaseiu Lake", startSize=100 , startTime=0 , highSal=15.5, lowSal=7.3 , lowTemp=20, highTemp=35 )
 GI= oyster(siteName= "Grand Isle", startSize=100 , startTime=0 , highSal=30, lowSal=16 , lowTemp=20, highTemp=35 )
 LM= oyster(siteName= "LUMCON", startSize=100 , startTime=0 , highSal=28, lowSal=14, lowTemp=20, highTemp=35 )
-# GI & LM have randomly assigned salinities atm (not in Hollis' manuscript)
+# GI & LM have randomly assigned salinities (not in Hollis' manuscript)
 
-LM_file = "LM_data.tsv"
-inFile = (LM_file, 'r')
-inFile = open(LM_file, 'r')
-LM_salinity = []
+# make class for temperature and salinity??
+
+LMfile = "LM_data.txt"
+inFile = (LMfile, 'r')
+inFile = open(LMfile, 'r')
+LMsalinity = []
 for salinity in inFile:
-    LM_salinity.append(salinity.split(' ')[0])
-print(LM_salinity)
+    LMsalinity.append(salinity.split(' ')[0])
+LMtemperature = []
+for temperature in inFile:
+    LMtemperature.append(temperature.split(' ')[0])
 
-#VB_file = "VB_data.tsv"			# make VB_data.tsv file
+print(LMsalinity)			##how do we pull out a certain column?? column for salinity? temperature?
+
+
+
+
+#VB_file = "VB_data.txt"			# make VB_data.txt file
 #inFile = (VB_file, 'r')
 #inFile = open(VB_file, 'r')
 
-#CL_file = "CL_data.tsv"			# make CL_data.tsv file
+#CL_file = "CL_data.txt"			# make CL_data.tsv file
 #inFile = (CL_file, 'r')
 #inFile = open(CL_file, 'r')
 
-#GI_file = "GI_data.tsv"			# make GI_data.tsv file
+#GI_file = "GI_data.txt"			# make GI_data.tsv file
 #inFile = (GI_file, 'r')
 #inFile = open(GI_file, 'r')
