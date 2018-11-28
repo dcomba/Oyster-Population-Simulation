@@ -2,13 +2,13 @@
 ## CHANGE FILES BASED ON SITE ##
 
 
-# for LM temperature 
+# making LM temperature file
 touch LMtemperature.txt
-awk '{print $8}' LM_data.txt > LMtemperature.txt
+awk '{print $6}' LM_data.txt > LMtemperature.txt
 
-# for LM salinity 
+# making LM salinity file  
 touch LMsalinity.txt
-awk '{print $6}' LM_data.txt > LMsalinity.txt
+awk '{print $8}' LM_data.txt > LMsalinity.txt
 
 
 
