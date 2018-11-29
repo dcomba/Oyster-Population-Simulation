@@ -42,6 +42,13 @@ class oysterpopulation:
 
         if (salinity == 20):
             newSize = newSize * 1.1
+#going to make updatePopulation into a list 
+#make list into an array
+#or make updatePopulation(s) from 3 different sites into one array using numpy.stack function
+#numpy.stack( LIST )
+#numpy.append ( LIST ) will be used to add numbers to the end of the array
+
+
 
 VB = oysterpopulation("Vermillion Bay", 50, 2, 25)
 CR = oysterpopulation("Calcasieu River", 50, 5, 25)
