@@ -5,12 +5,7 @@ import matplotlib.pyplot as plt
 	#Vermillion Bay near Cypremort Point 07387040 (4.2 ± 3.1ppt)
     	#Calc River near Cameron 08017118 (11.4 ± 4.1ppt)
     	#Caillou Bay SW of Cocodrie 073813498 ()
-#store output data (population size in an array)
-
-#(several lines on one graph?)(Each condition with 4 lines for each pop?)
-	#3 line graphs (salinity, temperature, combined salinity temperature)
-	#4 populations on each graph
-	#graph: x-axis(generations), y-axis(population-size) 
+	
      
 class oyster:
     """This class defines population tolerances for salinity and temperature and population size."""
@@ -35,7 +30,6 @@ class oyster:
         if (templistname == 20):
             newSize = newSize * 1.1
 
-time = np.arange(17521) # generates consecutive numbers starting at zero (to act as time points)
 updatePopSal =
 updatePopTemp = #use np.append to make individual site populationSize arrays (to later stack and graph as one master array with 3 arrays in it)
 
@@ -66,16 +60,26 @@ updatePopTemp = #use np.append to make individual site populationSize arrays (to
 
 VB= oyster("Vermillion Bay",50,2,25)
 oyster.pullSalinity(VB_salinity, "Vermillion.txt")
-oyster.pullTemperature(VB_temperature, "Vermillion.txt")		## ERROR VB_salinity not defined ****ASK******
+oyster.pullTemperature(VB_temperature, "Vermillion.txt")		## ERROR VB_salinity not defined ****ASK****** lists??
 
 CR= oyster("Calcaseiu River",50,5,25)
 CB= oyster("Calliou Bay",50,15,25)
 
 # Plotting results
+#graph: x-axis(time points), y-axis(population-size) 
+# time points generated using np.arange
+# population-size is a master array for 3 different sites (made by np.stack)
+# will have two different plots (salinity//temperature) 
+	# ...each with 3 lines for our different sites
+
+time = np.arange(17521) # generates consecutive numbers starting at zero (to act as time points on x axis)
+salinityPopulation= #stacked array
+temperaturePopulation= #stacked array
 
 plt.plot(, growth, color="m")
-# time as x generated using np.arange
-# y is gonna be master array for 3 different sites (made by np.stack)
+
+
+
 
 #>>> np.stack((array1, array2, array3))
 #array([[0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
