@@ -21,64 +21,57 @@ import matplotlib.pyplot as plt
 	#4 populations on each graph
 	#graph: x-axis(generations), y-axis(population-size) 
 
+#files for sites are made...now to read them
+
+     
 class oyster:
     """This class defines population tolerances for salinity and temperature and population size."""
 
-    def __init__(self, siteName, startSize, startTime, highSal, lowSal, lowTemp, highTemp):
+    def __init__(self, siteName, startSize, saltol, temptol):
         self.siteName= siteName
         self.startSize = startSize
-        self.startTime = startTime
-        self.highSal = highSal
-        self.lowSal = lowSal
-        self.lowTemp = lowTemp
-        self.highTemp = highTemp
-        self.generations = [[startSize, startTime]]
+        self.Sal = Sal
+        self.Temp = Temp
 
     def currentSize(self):
         return self.generations[self.generations.count - 1]
 
-    def updatePopulation(self):
-        newSize = self.startSize()[0]
-        if (salinity > self.highSal):		# set the 'salinity' and 'temperature' variables
-            newSize = newSize * 0.9		# ...with USGS current conditions data 
-        if (salinity < self.lowSal):
-            newSize = newSize * 0.9
-        if (temperature > self.highTemp):
-            newSize = newSize * 0.9
-       	if (temperature < self.lowTemp):	# will set survival percentage at more specific
-            newSize = newSize * 0.9		# ...thresholds later 
+#updating population size as conditions change over time
+## for loops
+    def updatePopSalinity(self, time, salinitylistname, templistname):
+        newSize = self.currentSize()[0]        
+	if (salinitylistname < self.saltol):
+            newSize = newSize * .7
+        if (salinitylistname < 1):
+            newSize = newSize * .1
+        if (templistname > self.temptol):
+            newSize = newSize * .6
+        if (salinitylistname == 20):
+        newSize = newSize * 1.1
 
-VB= oyster(siteName= "Vermillion Bay", startSize=100 , startTime=0 , highSal=7.3, lowSal=1.1 , lowTemp=20, highTemp=35 )
-CL= oyster(siteName= "Calcaseiu Lake", startSize=100 , startTime=0 , highSal=15.5, lowSal=7.3 , lowTemp=20, highTemp=35 )
-GI= oyster(siteName= "Grand Isle", startSize=100 , startTime=0 , highSal=30, lowSal=16 , lowTemp=20, highTemp=35 )
-LM= oyster(siteName= "LUMCON", startSize=100 , startTime=0 , highSal=28, lowSal=14, lowTemp=20, highTemp=35 )
-# GI & LM have randomly assigned salinities (not in Hollis' manuscript)
+#creating method to pull salinity data
+    def pullSalinity(self, filename= "", salintylistname=""):
+        col_num = 2
+        salinitylistname = []
+        delimiter = "|"
+        with open(filename) as f:
+            lines = f.readlines()
+            for line in lines:
+            line = line.split(delimiter)[col_num]
+            salinitylistname.append(line)
 
-# make class for temperature and salinity??
+    def pullTemperature(self, filename= "", templistname=""):
+        col_num = 1
+        templistname = []
+        delimiter = "|"
+        with open(filename) as f:
+            lines = f.readlines()
+            for line in lines:
+            line = line.split(delimiter)[col_num]
+            templistname.append(line)
 
-LMfile = "LM_data.txt"
-inFile = (LMfile, 'r')
-inFile = open(LMfile, 'r')
-LMsalinity = []
-for salinity in inFile:
-    LMsalinity.append(salinity.split(' ')[0])
-LMtemperature = []
-for temperature in inFile:
-    LMtemperature.append(temperature.split(' ')[0])
+VB= oyster("Vermillion Bay",50,25)
+pullsalinity("VBdata.txt", "VB_salinty")
 
-print(LMsalinity)			##how do we pull out a certain column?? column for salinity? temperature?
-
-
-
-
-#VB_file = "VB_data.txt"			# make VB_data.txt file
-#inFile = (VB_file, 'r')
-#inFile = open(VB_file, 'r')
-
-#CL_file = "CL_data.txt"			# make CL_data.tsv file
-#inFile = (CL_file, 'r')
-#inFile = open(CL_file, 'r')
-
-#GI_file = "GI_data.txt"			# make GI_data.tsv file
-#inFile = (GI_file, 'r')
-#inFile = open(GI_file, 'r')
+CR= oyster("Calcaseiu River",50,5,25)
+CB= oyster("Calliou Bay",50,15,25)
