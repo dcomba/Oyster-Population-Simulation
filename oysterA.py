@@ -15,7 +15,7 @@ with open("CalcRiv.txt") as f: #opening the file CalcRiv.txt
     for line in lines: #in going line by line in the CalcRiv.txt file
         line = line.split(delimiter)[col_num] #in each line, column number 1 (temperature values) is split by the "pipe" character which is serving as the delimiter
         print(line) #each resulting line will be printed to the screen
-        col_data.append(line) 
+        col_data.append(line) #appending the newly delimited lines to a file
 
 #defining the oyster population with attention to tolerances and sizes
 class oysterpopulation:
