@@ -4,6 +4,7 @@
 
 
 #import matplotlib as plot
+#import numpy as np
 
 
 #defining the oyster population with attention to tolerances and sizes
@@ -62,13 +63,19 @@ class oysterpopulation:
 #next step is to make our list of lists (salinites, temperatures, populations)
 
 VB = oysterpopulation("Vermillion Bay", 50, 2, 25)
-VB.updatePopulation("VBsallist", "VBtemplist")
-
-salinities = VB.salinity("filenamehere");
-
+VBsalinities = VB.pullsalinity("Vermillion.txt")
+VBtemperatures = VB.pulltemperature("Vermillion.txt")
+VB.updatePopulation(VBsalinities, VBtemperatures)
 
 CR = oysterpopulation("Calcasieu River", 50, 5, 25)
+CRsalinities = CR.pullsalinity("CalcRiv.txt")
+CRtemperatures = CR.pulltemperature("CalcRiv.txt")
+CR.updatePopulation(CRsalinities, CRtemperatures)
+
 CB = oysterpopulation("Caillou Bay", 50, 15, 25)
+CBsalinities = CB.pullsalinity("Caillou.txt")
+CBtemperatures = CB.pulltemperature("Caillou.txt")
+CB.updatePopulation(CBsalinities, CBtemperatures)
 
 
 
