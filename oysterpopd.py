@@ -13,47 +13,60 @@ class oysterpopulation:
     def __init__(self, site, startSize, saltol, temptol):
         self.saltol = saltol
         self.temptol = temptol
-        self.startSize = startSize
+        self.size = startSize
         self.site = site
 
     #pulling salinity data from USGS site files
-    def salinity(self, file = "", sallistname = "")
+    #make a list of salinities from a file
+    def pullsalinity(self, fileName):
         col_num = 2
-        sallistname = []
+        salinities = []
         delimiter = "|"
-        with open("file") as f:
-            lines = f.readlines()
+        with open(fileName) as file:
+            lines = file.readlines()
             for line in lines:
                 line = line.split(delimiter)[col_num]
-                sallistname.append(line)
+                salinities.append(float(line))
+        return salinities
 
     #pulling temperature data from USGS site files
-    def temperature(self, file = "", templistname = "")
+    #make a list of temperatures from a file
+    def pulltemperature(self, fileName):
         col_num = 1
-        templistname = []
+        temperatures = []
         delimiter = "|"
-        with open("file") as f:
-            lines = f.readlines()
+        with open(fileName) as file:
+            lines = file.readlines()
             for line in lines:
                 line = line.split(delimiter)[col_num]
-                templistname.append(line)
+                temperatures.append(float(line))
+        return temperatures
 
 
     #updating population size as conditions change over time
-    def updatePopulation(self, sallistname, templistname):
-        newSize = self.newSize()[0]
-        for sal in sallistname 
+    #need to make a list of population changes...how to do this?
+    def updatePopulation(self, salinities, temperatures):
+        newSize = self.size
+        for sal in salinities:
             if (sal < self.saltol):
                 newSize = newSize * .7
             if (sal < 1):
                 newSize = newSize * .1
-        for temp in templistname
+        for temp in temperatures:
             if (temp > self.temptol):
                 newSize = newSize * .6
             if (temp == 20):
                 newSize = newSize * 1.1
+        self.size = newSize
+
+#next step is to make our list of lists (salinites, temperatures, populations)
 
 VB = oysterpopulation("Vermillion Bay", 50, 2, 25)
+VB.updatePopulation("VBsallist", "VBtemplist")
+
+salinities = VB.salinity("filenamehere");
+
+
 CR = oysterpopulation("Calcasieu River", 50, 5, 25)
 CB = oysterpopulation("Caillou Bay", 50, 15, 25)
 
