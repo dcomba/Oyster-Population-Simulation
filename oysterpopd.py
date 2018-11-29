@@ -6,16 +6,9 @@
 #import matplotlib as plot
 
 #files for sites are made...now to read them
-#TEST FROM GOOGLE
-col_num = 1
-col_data = []
-delimiter = "|"
-with open("CalcRiv.txt") as f:
-    lines = f.readlines()
-    for line in lines:
-        line = line.split(delimiter)[col_num]
-        print(line)
-        col_data.append(line)
+
+
+
 
 #defining the oyster population with attention to tolerances and sizes
 class oysterpopulation:
@@ -27,12 +20,31 @@ class oysterpopulation:
         self.startSize = startSize
         self.site = site
 
-    def currentSize(self):
-        return self.generations[self.generations.count - 1]
+    def salinity(self, file = "", sallistname = "")
+        col_num = 2
+        sallistname = []
+        delimiter = "|"
+        with open("file") as f:
+            lines = f.readlines()
+            for line in lines:
+                line = line.split(delimiter)[col_num]
+                sallistname.append(line)
+
+    def temperature(self, file = "", templistname = "")
+        col_num = 1
+        templistname = []
+        delimiter = "|"
+        with open("file") as f:
+            lines = f.readlines()
+            for line in lines:
+                line = line.split(delimiter)[col_num]
+                templistname.append(line)
+
 
     #updating population size as conditions change over time
-    def updatePopulation(self, time, salinity, temperature):
-        newSize = self.currentSize()[0]
+    #we're going to need a for loop 
+    def updatePopulation(self, sallistname, templistname):
+        newSize = self.newSize()[0]
         if (salinity < self.saltol):
             newSize = newSize * .7
         if (salinity < 1):
@@ -48,14 +60,4 @@ CR = oysterpopulation("Calcasieu River", 50, 5, 25)
 CB = oysterpopulation("Caillou Bay", 50, 15, 25)
 
 
-data = [
-    [23,34],
-    [23,34],
-    [23,34],
-    [23,34],
-    [23,34],
-    [23,34],
-]
 
-for timePeriod in data:
-    lowsal.updatePopulation("time", timePeriod[0], timePeriod[1])
