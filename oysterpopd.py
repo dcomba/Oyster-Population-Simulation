@@ -46,6 +46,8 @@ class oysterpopulation:
 
     #updating population size as conditions change over time
     #need to make a list of population changes...how to do this?
+    #maybe make this two methods? 
+    #also need to include else conditions, otherwise it wont do anything
     def updatePopulation(self, salinities, temperatures):
         newSize = self.size
         for sal in salinities:
@@ -63,8 +65,8 @@ class oysterpopulation:
 #next step is to make our list of lists (salinites, temperatures, populations)
 
 VB = oysterpopulation("Vermillion Bay", 50, 2, 25)
-VBsalinities = VB.pullsalinity("Vermillion.txt")
-VBtemperatures = VB.pulltemperature("Vermillion.txt")
+VBsalinities = VB.pullsalinity("experimentalvb.txt")
+VBtemperatures = VB.pulltemperature("experimentalvb.txt")
 VB.updatePopulation(VBsalinities, VBtemperatures)
 
 CR = oysterpopulation("Calcasieu River", 50, 5, 25)
