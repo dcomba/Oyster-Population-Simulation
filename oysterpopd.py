@@ -65,18 +65,18 @@ class oysterpopulation:
 #next step is to make our list of lists (salinites, temperatures, populations)
 
 VB = oysterpopulation("Vermillion Bay", 50, 2, 25)
-VBsalinities = VB.pullsalinity("experimentalvb.txt")
-VBtemperatures = VB.pulltemperature("experimentalvb.txt")
+VBsalinities = VB.pullsalinity("VBAugSep.txt")
+VBtemperatures = VB.pulltemperature("VBAugSep.txt")
 VB.updatePopulation(VBsalinities, VBtemperatures)
 
 CR = oysterpopulation("Calcasieu River", 50, 5, 25)
-CRsalinities = CR.pullsalinity("CalcRiv.txt")
-CRtemperatures = CR.pulltemperature("CalcRiv.txt")
+CRsalinities = CR.pullsalinity("CRAugSep.txt")
+CRtemperatures = CR.pulltemperature("CRAugSep.txt")
 CR.updatePopulation(CRsalinities, CRtemperatures)
 
 CB = oysterpopulation("Caillou Bay", 50, 15, 25)
-CBsalinities = CB.pullsalinity("Caillou.txt")
-CBtemperatures = CB.pulltemperature("Caillou.txt")
+CBsalinities = CB.pullsalinity("CBAugSep.txt")
+CBtemperatures = CB.pulltemperature("CBAugSep.txt")
 CB.updatePopulation(CBsalinities, CBtemperatures)
 
 
