@@ -1,57 +1,47 @@
 #!/usr/bin/env python
-#this program simulates oyster populations in locations affected by salinity and temperature
-#the goal is to visually represent the effects of freshwater events during the summer on oyster populations
+# this program simulates oyster populations in locations affected by salinity and temperature
+# the goal is to visually represent the effects of freshwater events during the summer on oyster populations
 
 
 #import matplotlib as plot
 #import numpy as np
 
 
-#defining the oyster population with attention to tolerances and sizes
+# defining the oyster population with attention to tolerances and sizes
 class oysterpopulation:
     """This is a class to define oyster populations"""
 
     def __init__(self, site, startSize, saltol, temptol):
         self.saltol = saltol
         self.temptol = temptol
-        self.size = startSize
+        self.startSize = startSize
         self.site = site
 
-    #pyplot ignore nan
-    #preprocess/look for missing values: use nan
-    #pulling salinity data from USGS site files
-    #make a list of salinities from a file
+    def pulldata(self, fileName, columIndex):
+        data = []
+        delimiter = "|"
+        with open(fileName) as file:
+            for line in file.readlines():
+                line = line.split(delimiter)[columIndex]
+                data.append(float(line))
+        return data
+
+    # pulling salinity data from USGS site files
+    # make a list of salinities from a file
     def pullsalinity(self, fileName):
-        col_num = 2
-        salinities = []
-        delimiter = "|"
-        with open(fileName) as file:
-            lines = file.readlines()
-            for line in lines:
-                line = line.split(delimiter)[col_num]
-                salinities.append(float(line))
-        return salinities
+        return self.pulldata(fileName, 2)
 
-    #pulling temperature data from USGS site files
-    #make a list of temperatures from a file
+    # pulling temperature data from USGS site files
+    # make a list of temperatures from a file
     def pulltemperature(self, fileName):
-        col_num = 1
-        temperatures = []
-        delimiter = "|"
-        with open(fileName) as file:
-            lines = file.readlines()
-            for line in lines:
-                line = line.split(delimiter)[col_num]
-                temperatures.append(float(line))
-        return temperatures
+        return self.pulldata(fileName, 1)
 
-
-    #updating population size as conditions change over time
-    #need to make a list of population changes...how to do this?
-    #maybe make this two methods? 
-    #also need to include else conditions, otherwise it wont do anything
+    # updating population size as conditions change over time
+    # need to make a list of population changes...how to do this?
+    # maybe make this two methods?
+    # also need to include else conditions, otherwise it wont do anything
     def updatePopulation(self, salinities, temperatures):
-        newSize = self.size
+        newSize = self.startSize
         for sal in salinities:
             if (sal < self.saltol):
                 newSize = newSize * .7
@@ -62,24 +52,69 @@ class oysterpopulation:
                 newSize = newSize * .6
             if (temp == 20):
                 newSize = newSize * 1.1
-        self.size = newSize
+        self.startSize = newSize
 
-#next step is to make our list of lists (salinites, temperatures, populations)
+    def simulatePopulation(self, salinities, temperatures):
+        populationSizes = []
+        populationSizes.append(self.startSize)
+        environments = zip(salinities, temperatures)
+        salinityTimer = 10
+        temperatureTimer = 10
+        for environment in environments:
+            salinity = environment[0]
+            temperature = environment[1]
+            newSize = populationSizes[-1]
+            if (salinity < self.saltol):
+                salinityTimer = salinityTimer - 1
+                if (salinityTimer <= 0):
+                    newSize = newSize * .7
+            else:
+                salinityTimer = salinityTimer + 1
+            if (salinity < 1):
+                salinityTimer = salinityTimer - 1
+                if (salinityTimer <= 0):
+                    newSize = newSize * .1
+            if (temperature > self.temptol):
+                temperatureTimer = temperatureTimer - 1
+                if (temperatureTimer <= 0):
+                    newSize = newSize * .6
+            else:
+                temperatureTimer = temperatureTimer + 1
+            if (temperature == 20):
+                temperatureTimer = temperatureTimer - 1
+                if (temperatureTimer <= 0):
+                    newSize = newSize * 1.1
+            else:
+                temperatureTimer = temperatureTimer + 1
+            populationSizes.append(newSize)
+            if temperatureTimer > 10:
+                temperatureTimer = 10
+            if salinityTimer > 10:
+                salinityTimer = 10
+            if temperatureTimer < 0:
+                temperatureTimer = 0
+            if salinityTimer < 0:
+                salinityTimer = 0
+        return populationSizes[1:]
+
+
+# next step is to make our list of lists (salinites, temperatures, populations)
+
 
 VB = oysterpopulation("Vermillion Bay", 50, 2, 25)
 VBsalinities = VB.pullsalinity("VBAugSep.txt")
 VBtemperatures = VB.pulltemperature("VBAugSep.txt")
-VB.updatePopulation(VBsalinities, VBtemperatures)
+# VB.updatePopulation(VBsalinities, VBtemperatures)
 
 CR = oysterpopulation("Calcasieu River", 50, 5, 25)
 CRsalinities = CR.pullsalinity("CRAugSep.txt")
 CRtemperatures = CR.pulltemperature("CRAugSep.txt")
-CR.updatePopulation(CRsalinities, CRtemperatures)
+# CR.updatePopulation(CRsalinities, CRtemperatures)
 
 CB = oysterpopulation("Caillou Bay", 50, 15, 25)
 CBsalinities = CB.pullsalinity("CBAugSep.txt")
 CBtemperatures = CB.pulltemperature("CBAugSep.txt")
-CB.updatePopulation(CBsalinities, CBtemperatures)
+# CB.updatePopulation(CBsalinities, CBtemperatures)
 
-
-
+for pop in CR.simulatePopulation(CRsalinities, CRtemperatures):
+    print(pop)
