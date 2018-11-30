@@ -3,8 +3,9 @@
 # the goal is to visually represent the effects of freshwater events during the summer on oyster populations
 
 
-#import matplotlib as plot
-#import numpy as np
+import matplotlib.pyplot as plt
+import numpy as np
+#time = np.arange(2100)
 
 
 # defining the oyster population with attention to tolerances and sizes
@@ -17,12 +18,12 @@ class oysterpopulation:
         self.startSize = startSize
         self.site = site
 
-    def pulldata(self, fileName, columIndex):
+    def pulldata(self, fileName, columnIndex):
         data = []
         delimiter = "|"
         with open(fileName) as file:
             for line in file.readlines():
-                line = line.split(delimiter)[columIndex]
+                line = line.split(delimiter)[columnIndex]
                 data.append(float(line))
         return data
 
@@ -36,23 +37,21 @@ class oysterpopulation:
     def pulltemperature(self, fileName):
         return self.pulldata(fileName, 1)
 
+    
     # updating population size as conditions change over time
-    # need to make a list of population changes...how to do this?
-    # maybe make this two methods?
-    # also need to include else conditions, otherwise it wont do anything
-    def updatePopulation(self, salinities, temperatures):
-        newSize = self.startSize
-        for sal in salinities:
-            if (sal < self.saltol):
-                newSize = newSize * .7
-            if (sal < 1):
-                newSize = newSize * .1
-        for temp in temperatures:
-            if (temp > self.temptol):
-                newSize = newSize * .6
-            if (temp == 20):
-                newSize = newSize * 1.1
-        self.startSize = newSize
+    #def updatePopulation(self, salinities, temperatures):
+        #newSize = self.startSize
+        #for sal in salinities:
+            #if (sal < self.saltol):
+                #newSize = newSize * .7
+            #if (sal < 1):
+                #newSize = newSize * .1
+        #for temp in temperatures:
+            #if (temp > self.temptol):
+                #newSize = newSize * .6
+            #if (temp == 20):
+                #newSize = newSize * 1.1
+        #self.startSize = newSize
 
     def simulatePopulation(self, salinities, temperatures):
         populationSizes = []
@@ -100,21 +99,42 @@ class oysterpopulation:
 
 # next step is to make our list of lists (salinites, temperatures, populations)
 
+class timesdata:
+    
+    def pulltimes(self, fileName, columnIndex):
+        data = []
+        delimiter = "|"
+        with open(fileName) as file:
+            for line in file.readlines():
+                line = line.split(delimiter)[columnIndex]
+                data.append(line)
+        return data
+
+times = timesdata()
+timesforplot = times.pulltimes("CRAugSep.txt", 0)
 
 VB = oysterpopulation("Vermillion Bay", 50, 2, 25)
 VBsalinities = VB.pullsalinity("VBAugSep.txt")
 VBtemperatures = VB.pulltemperature("VBAugSep.txt")
-# VB.updatePopulation(VBsalinities, VBtemperatures)
+VBpopulation = VB.simulatePopulation(VBsalinities, VBtemperatures)
 
 CR = oysterpopulation("Calcasieu River", 50, 5, 25)
 CRsalinities = CR.pullsalinity("CRAugSep.txt")
 CRtemperatures = CR.pulltemperature("CRAugSep.txt")
-# CR.updatePopulation(CRsalinities, CRtemperatures)
+CRpopulation = CR.simulatePopulation(CRsalinities, CRtemperatures)
 
 CB = oysterpopulation("Caillou Bay", 50, 15, 25)
 CBsalinities = CB.pullsalinity("CBAugSep.txt")
 CBtemperatures = CB.pulltemperature("CBAugSep.txt")
-# CB.updatePopulation(CBsalinities, CBtemperatures)
+CBpopulation = CB.simulatePopulation(CBsalinities, CBtemperatures)
 
-for pop in CR.simulatePopulation(CRsalinities, CRtemperatures):
-    print(pop)
+
+
+#for pop in CR.simulatePopulation(CRsalinities, CRtemperatures):
+    #print(pop)
+
+Populations = np.stack((VBpopulation, CRpopulation, CBpopulation))
+
+plt.plot(times, Populations, color="m")
+
+
