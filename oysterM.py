@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-import numpy
-import numpy.random as nr
+import numpy as np
 import matplotlib.pyplot as plt
 	#Vermillion Bay near Cypremort Point 07387040 (4.2 ± 3.1ppt)
     	#Calc River near Cameron 08017118 (11.4 ± 4.1ppt)
@@ -33,61 +32,44 @@ class oysterpopulation:
     def pulltemperature(self, fileName):
         return self.pulldata(fileName, 1)
 
-    # updating population size as conditions change over time
-    # need to make a list of population changes...how to do this?
-    # maybe make this two methods?
-    # also need to include else conditions, otherwise it wont do anything
-    def updatePopulation(self, salinities, temperatures):
-        newSize = self.startSize
-        for sal in salinities:
-            if (sal < self.saltol):
-                newSize = newSize * .7
-            if (sal < 1):
-                newSize = newSize * .1
-        for temp in temperatures:
-            if (temp > self.temptol):
-                newSize = newSize * .6
-            if (temp == 20):
-                newSize = newSize * 1.1
-        self.startSize = newSize
-
     def simulatePopulation(self, salinities, temperatures):
         populationSizes = []
         populationSizes.append(self.startSize)
         environments = zip(salinities, temperatures)
-        salinityTimer = 10
-        temperatureTimer = 10
+        salinityTimer = 240
+        temperatureTimer = 240
         for environment in environments:
             salinity = environment[0]
             temperature = environment[1]
             newSize = populationSizes[-1]
             if (salinity < self.saltol):
-                salinityTimer = salinityTimer - 1
+                salinityTimer = salinityTimer - 48
                 if (salinityTimer <= 0):
-                    newSize = newSize * .7
+                    newSize = newSize * .9
             else:
-                salinityTimer = salinityTimer + 1
+                salinityTimer = salinityTimer + 48
             if (salinity < 1):
-                salinityTimer = salinityTimer - 1
+                salinityTimer = salinityTimer - 48
                 if (salinityTimer <= 0):
-                    newSize = newSize * .1
-            if (temperature > self.temptol):
-                temperatureTimer = temperatureTimer - 1
-                if (temperatureTimer <= 0):
                     newSize = newSize * .6
-            else:
-                temperatureTimer = temperatureTimer + 1
-            if (temperature == 20):
-                temperatureTimer = temperatureTimer - 1
+            if (temperature > self.temptol):
+                temperatureTimer = temperatureTimer - 48
+
                 if (temperatureTimer <= 0):
-                    newSize = newSize * 1.1
+                    newSize = newSize * .99
             else:
-                temperatureTimer = temperatureTimer + 1
+                temperatureTimer = temperatureTimer + 48
+            if (temperature == 20):
+                temperatureTimer = temperatureTimer - 48
+                if (temperatureTimer <= 0):
+                    newSize = newSize * 1.5
+            else:
+                temperatureTimer = temperatureTimer + 48
             populationSizes.append(newSize)
-            if temperatureTimer > 10:
-                temperatureTimer = 10
-            if salinityTimer > 10:
-                salinityTimer = 10
+            if temperatureTimer > 240:
+                temperatureTimer = 240
+            if salinityTimer > 240:
+                salinityTimer = 240
             if temperatureTimer < 0:
                 temperatureTimer = 0
             if salinityTimer < 0:
@@ -95,33 +77,43 @@ class oysterpopulation:
         return populationSizes[1:]
 
 
-VB = oysterpopulation("Vermillion Bay", 50, 2, 25)
+VB = oysterpopulation("Vermillion Bay", 10000, 5, 29)
 VBsalinities = VB.pullsalinity("VBAugSep.txt")
 VBtemperatures = VB.pulltemperature("VBAugSep.txt")
-# VB.updatePopulation(VBsalinities, VBtemperatures)
+VBpopulation = VB.simulatePopulation(VBsalinities, VBtemperatures)
 
-CR = oysterpopulation("Calcasieu River", 50, 5, 25)
+CR = oysterpopulation("Calcasieu River", 10000, 7, 29)
 CRsalinities = CR.pullsalinity("CRAugSep.txt")
 CRtemperatures = CR.pulltemperature("CRAugSep.txt")
-# CR.updatePopulation(CRsalinities, CRtemperatures)
+CRpopulation = CR.simulatePopulation(CRsalinities, CRtemperatures)
 
-CB = oysterpopulation("Caillou Bay", 50, 15, 25)
+CB = oysterpopulation("Caillou Bay", 10000, 14, 29)
 CBsalinities = CB.pullsalinity("CBAugSep.txt")
 CBtemperatures = CB.pulltemperature("CBAugSep.txt")
-# CB.updatePopulation(CBsalinities, CBtemperatures)
+CBpopulation = CB.simulatePopulation(CBsalinities, CBtemperatures)
 
-for pop in CR.simulatePopulation(CRsalinities, CRtemperatures):
-print(pop)
 
 # Plotting results
-# graph: x-axis(time points), y-axis(population-size) 
-# will have two different plots (salinity//temperature each with 3 lines for our different sites
-
 # setting time points (*******arange based on number of lines of data in Devin's files*****)
-time = np.arange(2101) # generates consecutive numbers starting at zero (to act as time points on x axis)
+timeS = np.arange(2177) # generates consecutive numbers starting at zero (to act as time points on x axis)
+timeT = np.arange(2177)
+timeP = np.arange(2177)
 
-salinityPlot= plt.plot(time, VBsalinities) + plt.plot(time, CRsalinity) + plt.plot(time, CBsalinity)
-plt.show(salinityPlot)
+#blue VB
+#orange CR
+#green CB
 
-temperaturePlot= plt.plot()= plt.plot(time, VBtemperature) + plt.plot(time, CRsalinity) + plt.plot(time, CBsalinity)
+salinitiesPlot= plt.plot(timeS, VBsalinities) + plt.plot(timeS, CRsalinities) + plt.plot(timeS, CBsalinities)
+plt.xlabel("time points") ; plt.ylabel("salinity(ppt)") ; plt.title("Salinity variation over two month span in Northern GOM")
+plt.show(salinitiesPlot)
+#plt.savefig("salinityPlot.png")
+
+temperaturePlot= plt.plot(timeT, VBtemperatures) + plt.plot(timeT, CRtemperatures) + plt.plot(timeT, CBtemperatures)
+plt.xlabel("time points") ; plt.ylabel("temperature(Celcius)") ; plt.title("Temperature variation over two month span in Northern GOM")
 plt.show(temperaturePlot)
+#plt.savefig("temperaturePlot.png")
+
+populationPlot= plt.plot(timeP, VBpopulation) + plt.plot(timeP, CRpopulation) + plt.plot(timeP, CBpopulation)
+plt.xlabel("time points") ; plt.ylabel("population size") ; plt.title("Population of Oysters over time")
+plt.show(populationPlot)
+#plt.savefig("temperaturePlot.png")
