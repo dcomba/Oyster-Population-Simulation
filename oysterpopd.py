@@ -17,6 +17,8 @@ class oysterpopulation:
         self.size = startSize
         self.site = site
 
+    #pyplot ignore nan
+    #preprocess/look for missing values: use nan
     #pulling salinity data from USGS site files
     #make a list of salinities from a file
     def pullsalinity(self, fileName):
