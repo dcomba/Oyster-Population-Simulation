@@ -105,18 +105,18 @@ plt.xlabel("Time point") ; plt.ylabel("Population Count") ; plt.title("Populatio
 
 plt.show(populationplot)
 
-plt.savefig("PopulationData")
+plt.savefig("PopulationData.png")
 
 salinityplot = plt.plot(time, VBsalinities) + plt.plot(time, CRsalinities) + plt.plot(time, CBsalinities)
 plt.xlabel("Time point") ; plt.ylabel("Salinity (ppt)") ; plt.title("Salinity over time")
 
 plt.show(salinityplot)
 
-plt.savefig("salinityplot")
+plt.savefig("salinityplot.png")
 
 temperatureplot = plt.plot(time, VBtemperatures) + plt.plot(time, CRtemperatures) + plt.plot(time, CBtemperatures)
 plt.xlabel("Time point") ; plt.ylabel("Temperature (Celcius)") ; plt.title("Temperature over time")
 
 plt.show(temperatureplot)
 
-plt.savefig("temperatureplot")
+plt.savefig("temperatureplot.png")
