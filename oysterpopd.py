@@ -73,8 +73,7 @@ class oysterpopulation: #creating oysterpopulation class
             populationSizes.append(newSize) #every 5 days, new oyster population size determined by environment conditions
                                             #will be appended to list of oyster population sizes
 
-            #reseting all the condition timers
-            #after 5 days is up, under the temperature conditions and under the salinity conditions, both timers will reset
+            #binding the timers so that they do not go below 0 or above 240
             if temperatureTimer > 240:  
                 temperatureTimer = 240 
             if salinityTimer > 240: 
