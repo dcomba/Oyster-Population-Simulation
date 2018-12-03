@@ -1,86 +1,119 @@
 #!/usr/bin/env python
-import numpy
-import numpy.random as nr
+import numpy as np
 import matplotlib.pyplot as plt
 	#Vermillion Bay near Cypremort Point 07387040 (4.2 ± 3.1ppt)
     	#Calc River near Cameron 08017118 (11.4 ± 4.1ppt)
     	#Caillou Bay SW of Cocodrie 073813498 ()
-#store output data (population size in an array)
-
-#(several lines on one graph?)(Each condition with 4 lines for each pop?)
-	#3 line graphs (salinity, temperature, combined salinity temperature)
-	#4 populations on each graph
-	#graph: x-axis(generations), y-axis(population-size) 
-     
-class oyster:
+class oysterpopulation:
     """This class defines population tolerances for salinity and temperature and population size."""
 
-    def __init__(self, siteName, startSize, saltol, temptol):
-        self.siteName= siteName
-        self.startSize = startSize
+    def __init__(self, site, startSize, saltol, temptol):
         self.saltol = saltol
         self.temptol = temptol
+        self.startSize = startSize
+        self.site = site
 
-#updating population size as conditions change over time
-## APPEND NEW SIZE INTO UPDATE POP ARRAY FOR 1) TEMP 2) SIZE******* 
-    def updatePopSal(self, time, salinitylistname, templistname):
-        newSize = self.startsize[0]        
-        if (salinitylistname < self.saltol):
-            newSize = newSize * .7
-        if (salinitylistname < 1):
-            newSize = newSize * .1
-    def updatePopTemp(self, time, salinitylistname, templistname):
-        if (templistname > self.temptol):
-            newSize = newSize * .6
-        if (templistname == 20):
-            newSize = newSize * 1.1
-
-time = np.arange(17521) # generates consecutive numbers starting at zero (to act as time points)
-updatePopSal =
-updatePopTemp = #use np.append to make individual site populationSize arrays (to later stack and graph as one master array with 3 arrays in it)
-
-
-# make a master array from all of the individual 
-
-
-#creating method to pull salinity data
-    def pullSalinity(self,salinitylistname filename= ""):
-        col_num = 2
-        salinitylistname = []
+    def pulldata(self, fileName, columIndex):
+        data = []
         delimiter = "|"
-        with open(filename) as f:
-            lines = f.readlines()
-            for line in lines:
-                line = line.split(delimiter)[col_num]
-            salinitylistname.append(line)
+        with open(fileName) as file:
+            for line in file.readlines():
+                line = line.split(delimiter)[columIndex]
+                data.append(float(line))
+        return data
 
-    def pullTemperature(self, templistname, filename= ""):
-        col_num = 1
-        templistname = []
-        delimiter = "|"
-        with open(filename) as f:
-            lines = f.readlines()
-            for line in lines:
-                line = line.split(delimiter)[col_num]
-            templistname.append(line)
+    # pulling salinity data from USGS site files
+    # make a list of salinities from a file
+    def pullsalinity(self, fileName):
+        return self.pulldata(fileName, 2)
 
-VB= oyster("Vermillion Bay",50,2,25)
-oyster.pullSalinity(VB_salinity, "Vermillion.txt")
-oyster.pullTemperature(VB_temperature, "Vermillion.txt")		## ERROR VB_salinity not defined ****ASK******
+    # pulling temperature data from USGS site files
+    # make a list of temperatures from a file
+    def pulltemperature(self, fileName):
+        return self.pulldata(fileName, 1)
 
-CR= oyster("Calcaseiu River",50,5,25)
-CB= oyster("Calliou Bay",50,15,25)
+    def simulatePopulation(self, salinities, temperatures):
+        populationSizes = []
+        populationSizes.append(self.startSize)
+        environments = zip(salinities, temperatures)
+        salinityTimer = 240
+        temperatureTimer = 240
+        for environment in environments:
+            salinity = environment[0]
+            temperature = environment[1]
+            newSize = populationSizes[-1]
+            if (salinity < self.saltol):
+                salinityTimer = salinityTimer - 48
+                if (salinityTimer <= 0):
+                    newSize = newSize * .9
+            else:
+                salinityTimer = salinityTimer + 48
+            if (salinity < 1):
+                salinityTimer = salinityTimer - 48
+                if (salinityTimer <= 0):
+                    newSize = newSize * .6
+            if (temperature > self.temptol):
+                temperatureTimer = temperatureTimer - 48
+
+                if (temperatureTimer <= 0):
+                    newSize = newSize * .99
+            else:
+                temperatureTimer = temperatureTimer + 48
+            if (temperature == 20):
+                temperatureTimer = temperatureTimer - 48
+                if (temperatureTimer <= 0):
+                    newSize = newSize * 1.5
+            else:
+                temperatureTimer = temperatureTimer + 48
+            populationSizes.append(newSize)
+            if temperatureTimer > 240:
+                temperatureTimer = 240
+            if salinityTimer > 240:
+                salinityTimer = 240
+            if temperatureTimer < 0:
+                temperatureTimer = 0
+            if salinityTimer < 0:
+                salinityTimer = 0
+        return populationSizes[1:]
+
+
+VB = oysterpopulation("Vermillion Bay", 10000, 5, 29)
+VBsalinities = VB.pullsalinity("VBAugSep.txt")
+VBtemperatures = VB.pulltemperature("VBAugSep.txt")
+VBpopulation = VB.simulatePopulation(VBsalinities, VBtemperatures)
+
+CR = oysterpopulation("Calcasieu River", 10000, 7, 29)
+CRsalinities = CR.pullsalinity("CRAugSep.txt")
+CRtemperatures = CR.pulltemperature("CRAugSep.txt")
+CRpopulation = CR.simulatePopulation(CRsalinities, CRtemperatures)
+
+CB = oysterpopulation("Caillou Bay", 10000, 14, 29)
+CBsalinities = CB.pullsalinity("CBAugSep.txt")
+CBtemperatures = CB.pulltemperature("CBAugSep.txt")
+CBpopulation = CB.simulatePopulation(CBsalinities, CBtemperatures)
+
 
 # Plotting results
+# setting time points (*******arange based on number of lines of data in Devin's files*****)
+timeS = np.arange(2177) # generates consecutive numbers starting at zero (to act as time points on x axis)
+timeT = np.arange(2177)
+timeP = np.arange(2177)
 
-plt.plot(, growth, color="m")
-# time as x generated using np.arange
-# y is gonna be master array for 3 different sites (made by np.stack)
+#blue VB
+#orange CR
+#green CB
 
-#>>> np.stack((array1, array2, array3))
-#array([[0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-#       [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-#       [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]])
+salinitiesPlot= plt.plot(timeS, VBsalinities) + plt.plot(timeS, CRsalinities) + plt.plot(timeS, CBsalinities)
+plt.xlabel("time points") ; plt.ylabel("salinity(ppt)") ; plt.title("Salinity variation over two month span in Northern GOM")
+plt.show(salinitiesPlot)
+#plt.savefig("salinityPlot.png")
 
+temperaturePlot= plt.plot(timeT, VBtemperatures) + plt.plot(timeT, CRtemperatures) + plt.plot(timeT, CBtemperatures)
+plt.xlabel("time points") ; plt.ylabel("temperature(Celcius)") ; plt.title("Temperature variation over two month span in Northern GOM")
+plt.show(temperaturePlot)
+#plt.savefig("temperaturePlot.png")
 
-
+populationPlot= plt.plot(timeP, VBpopulation) + plt.plot(timeP, CRpopulation) + plt.plot(timeP, CBpopulation)
+plt.xlabel("time points") ; plt.ylabel("population size") ; plt.title("Population of Oysters over time")
+plt.show(populationPlot)
+#plt.savefig("temperaturePlot.png")
